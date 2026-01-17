@@ -1,234 +1,378 @@
-# System Design Study Plan
+# System Design Study Plan 
 
 > As java backend developer, I want extend my knowledge and master System Design concepts from basics to advanced.
 
-## Overview
+---
 
-This repository I have created to track my learning and notes.
+## Learning Goals
 
-## Learning Objectives
-
-- Understand core system design principles
-- Understand scalability, reliability, and performance optimization
-- Learn architectural patterns for building distributed systems
-- Apply Java/Spring Boot best practices in system design
+* Understand **core system design principles**
+* Design **scalable, reliable, and high-performance systems**
+* Learn **distributed systems internals**
+* Apply **Java, Spring Boot, and cloud-native best practices**
+* Be confident in **System Design and real production systems**
 
 ---
 
-## Study Plan
+## Phase 1: Foundations
 
-### Foundations
+### Core Fundamentals
 
-#### Core Fundamentals
-1. [Scalability](fundamentals/scalability.md)
-2. [Latency vs Throughput](fundamentals/latency-vs-throughput.md)
-3. [Horizontal vs Vertical Scaling](fundamentals/horizontal-vs-vertical-scaling.md)
-4. [Availability and Reliability](fundamentals/availability-reliability.md)
-5. [Fault Tolerance](fundamentals/fault-tolerance.md)
+📁 `fundamentals/`
 
-#### Data & Consistency
-1. [CAP Theorem](fundamentals/cap-theorem.md)
-2. [Consistency Models](fundamentals/consistency-models.md)
-3. [Data Partitioning](fundamentals/data-partitioning.md)
-4. [Load Balancing Algorithms](fundamentals/load-balancing-algorithms.md)
+* [ ] `scalability`
+* [ ] `latency-vs-throughput`
+* [ ] `horizontal-vs-vertical-scaling`
+* [ ] `availability-reliability`
+* [ ] `fault-tolerance`
+* [ ] `backpressure-basics`
+* [ ] `graceful-degradation`
 
-#### Networking Basics
-1. [DNS](networking/dns.md)
-2. [HTTP and HTTPS](networking/http-https.md)
-3. [TCP vs UDP](networking/tcp-vs-udp.md)
-4. [Proxies and Reverse Proxies](networking/proxies-reverse-proxies.md)
-5. [CDN](networking/cdn.md)
+📌 **Goal**: Understand *why* systems fail and *how* they scale.
 
 ---
 
-### Storage & Data Management
+### Capacity Estimation & System Math
 
-#### Database Fundamentals
-1. [SQL vs NoSQL](databases/sql-vs-nosql.md)
-2. [ACID vs BASE](databases/acid-vs-base.md)
-3. [Database Transactions](databases/transactions.md)
-4. [Indexing](databases/indexing.md)
-5. [Normalization](databases/normalization.md)
+📁 `fundamentals/`
 
-#### Database Scalability
-1. [Replication](databases/replication.md)
-2. [Sharding](databases/sharding.md)
-3. [Connection Pooling](databases/connection-pooling.md)
-4. [NoSQL Types](databases/nosql-types.md)
+* [ ] `capacity-estimation`
+* [ ] `traffic-estimation`
+* [ ] `storage-estimation`
+* [ ] `qps-calculation`
+* [ ] `latency-budgeting`
+* [ ] `back-of-the-envelope-calculations`
 
-#### Caching Strategies
-1. [Redis Basics](caching/redis-basics.md)
-2. [Cache-Aside](caching/cache-aside.md)
-3. [Write-Through](caching/write-through.md)
-4. [Write-Behind](caching/write-behind.md)
-5. [Read-Through](caching/read-through.md)
-6. [Cache Invalidation](caching/cache-invalidation.md)
-7. [Distributed Caching](caching/distributed-caching.md)
-8. [Multi-Tenant Caching](caching/multi-tenant-caching.md)
+📌 **Goal**: Size systems realistically and justify design decisions.
 
 ---
 
-### Communication & Messaging
+### Data & Consistency
 
-#### API Design
-1. [REST API Design](api-design/rest-api-design.md)
-2. [API Versioning](api-design/api-versioning.md)
-3. [Pagination](api-design/pagination.md)
-4. [GraphQL](api-design/graphql.md)
-5. [gRPC](api-design/grpc.md)
+📁 `fundamentals/`
 
-#### Asynchronous Communication
-1. [Kafka](messaging/kafka.md)
-2. [RabbitMQ](messaging/rabbitmq.md)
-3. [Pub-Sub Pattern](messaging/pub-sub-pattern.md)
-4. [Message Queue vs Event Streaming](messaging/message-queue-vs-event-streaming.md)
-5. [Exactly-Once Delivery](messaging/exactly-once.md)
-6. [Message Ordering](messaging/message-ordering.md)
-7. [Dead Letter Queue](messaging/dead-letter-queue.md)
+* [ ] `cap-theorem`
+* [ ] `consistency-models`
+* [ ] `eventual-consistency-patterns`
+* [ ] `data-partitioning`
+* [ ] `hot-keys-problem`
+* [ ] `denormalization-at-scale`
+* [ ] `load-balancing-algorithms`
+
+📌 **Goal**: Balance correctness, availability, and performance.
 
 ---
 
-### Design Patterns & Resilience
+### Time, Ordering & Clocks
 
-#### Core Design Patterns
-1. [Singleton](design-patterns/singleton.md)
-2. [Factory](design-patterns/factory.md)
-3. [Strategy](design-patterns/strategy.md)
-4. [Circuit Breaker](design-patterns/circuit-breaker.md)
+📁 `fundamentals/`
 
-#### Resilience Patterns
-1. [Retry Pattern](design-patterns/retry-pattern.md)
-2. [Bulkhead](design-patterns/bulkhead.md)
-3. [Rate Limiting](design-patterns/rate-limiting.md)
-4. [Load Balancing](design-patterns/load-balancing.md)
-5. [Backpressure](design-patterns/backpressure.md)
+* [ ] `clock-skew`
+* [ ] `ntp-time-sync`
+* [ ] `lamport-clocks`
+* [ ] `vector-clocks`
+* [ ] `event-time-vs-processing-time`
+* [ ] `out-of-order-events`
 
-#### Critical Patterns
-1. [Idempotency](design-patterns/idempotency.md)
-2. [WebSockets](networking/websockets.md)
+📌 **Goal**: Handle time correctly in distributed systems.
 
 ---
 
-### Architecture Patterns
+### Networking Basics
 
-#### Modern Architecture
-1. [Monolith vs Microservices](architecture-patterns/monolith-vs-microservices.md)
-2. [Event-Driven Architecture](architecture-patterns/event-driven-architecture.md)
-3. [CQRS](architecture-patterns/cqrs.md)
-4. [Saga Pattern](architecture-patterns/saga-pattern.md)
+📁 `networking/`
 
-#### Advanced Patterns
-1. [API Gateway](architecture-patterns/api-gateway.md)
-2. [Service Mesh](architecture-patterns/service-mesh.md)
-3. [Backend for Frontend](architecture-patterns/backend-for-frontend.md)
-4. [Hexagonal Architecture](architecture-patterns/hexagonal-architecture.md)
+* [ ] `dns`
+* [ ] `http-https`
+* [ ] `tcp-vs-udp`
+* [ ] `connection-lifecycle`
+* [ ] `keep-alive`
+* [ ] `proxies-reverse-proxies`
+* [ ] `cdn`
 
-#### Migration & Strategy
-1. [Strangler Fig Pattern](architecture-patterns/strangler-fig-pattern.md)
+📌 **Goal**: Understand how requests flow across networks.
 
 ---
 
-### Security & Observability
+## Phase 2: Storage & Data Management
 
-#### Security
-1. [Authentication vs Authorization](security/authentication-vs-authorization.md)
-2. [OAuth2 and JWT](security/oauth2-jwt.md)
-3. [API Security](security/api-security.md)
-4. [Encryption](security/encryption.md)
-5. [DDoS Protection](security/ddos-protection.md)
+### Database Fundamentals
 
-#### Observability
-1. [Logging](observability/logging.md)
-2. [Monitoring](observability/monitoring.md)
-3. [Metrics](observability/metrics.md)
-4. [Distributed Tracing](observability/distributed-tracing.md)
-5. [Health Checks](observability/health-checks.md)
+📁 `databases/`
+
+* [ ] `sql-vs-nosql`
+* [ ] `acid-vs-base`
+* [ ] `transactions`
+* [ ] `indexing`
+* [ ] `normalization`
+* [ ] `read-vs-write-optimized-models`
 
 ---
 
-### Performance & Optimization
+### Database Scalability
 
-1. [Performance Optimization Techniques](performance/optimization-techniques.md)
-2. [Database Query Optimization](performance/database-query-optimization.md)
-3. [Bottleneck Identification](performance/bottleneck-identification.md)
+📁 `databases/`
 
----
+* [ ] `replication`
+* [ ] `sharding`
+* [ ] `leader-election`
+* [ ] `failover-strategies`
+* [ ] `connection-pooling`
+* [ ] `nosql-types`
 
-### Storage Systems
-
-1. [Object Storage](storage/object-storage.md)
-2. [Blob Storage](storage/blob-storage.md)
-3. [Data Lakes vs Data Warehouses](storage/data-lakes-vs-warehouses.md)
-
----
-
-### Java-Specific Deep Dive
-
-#### Spring Ecosystem
-1. [Spring Boot Architecture](java-specific/spring-boot-architecture.md)
-2. [Microservices with Spring Cloud](java-specific/microservices-with-spring-cloud.md)
-
-#### JVM & Concurrency
-1. [JVM Performance Tuning](java-specific/jvm-performance-tuning.md)
-2. [Java Concurrency](java-specific/java-concurrency.md)
+📌 **Goal**: Scale data without breaking consistency.
 
 ---
 
-### Distributed Systems
+## Phase 3: Caching
 
-Advanced topics for building large-scale distributed systems.
+📁 `caching/`
 
-1. [Consensus Algorithms](distributed-systems/consensus-algorithms.md)
-2. [Distributed Locks](distributed-systems/distributed-locks.md)
-3. [Vector Clocks](distributed-systems/vector-clocks.md)
-4. [Gossip Protocol](distributed-systems/gossip-protocol.md)
+* [ ] `redis-basics`
+* [ ] `local-vs-distributed-cache`
+* [ ] `two-level-cache`
+* [ ] `cache-aside`
+* [ ] `read-through`
+* [ ] `write-through`
+* [ ] `write-behind`
+* [ ] `cache-invalidation`
+* [ ] `cache-eviction-policies`
+* [ ] `cache-warming`
+* [ ] `cache-stampede`
+* [ ] `cache-penetration`
+* [ ] `multi-tenant-caching`
 
----
-
-### Real-World System Design Cases
-
-Practice designing complete systems from scratch.
-
-#### Fundamental Systems
-1. [URL Shortener](system-design-cases/url-shortener.md)
-2. [Rate Limiter](system-design-cases/rate-limiter.md)
-3. [Distributed Cache](system-design-cases/distributed-cache.md)
-
-#### Communication Systems
-1. [Chat System](system-design-cases/chat-system.md)
-2. [Notification Service](system-design-cases/notification-service.md)
-
-#### Content Systems
-1. [Social Media Feed](system-design-cases/social-media-feed.md)
-2. [Search Engine](system-design-cases/search-engine.md)
-
-#### Storage & Media
-1. [File Storage System](system-design-cases/file-storage-system.md)
-2. [Video Streaming](system-design-cases/video-streaming.md)
-
-#### Business Applications
-1. [E-Commerce Platform](system-design-cases/e-commerce-platform.md)
-2. [Payment System](system-design-cases/payment-system.md)
-3. [Booking System](system-design-cases/booking-system.md)
-4. [Multi-Tenant SaaS](system-design-cases/multi-tenant-saas.md)
+📌 **Goal**: Reduce latency and DB load safely.
 
 ---
 
+## Phase 4: Communication & Messaging
 
-## Progress Tracking
+### API Design
 
-Create a simple checklist to track your progress:
+📁 `api-design/`
 
-- [ ] Phase 1: Foundations 
-- [ ] Phase 2: Storage & Data Management
-- [ ] Phase 3: Communication & Messaging
-- [ ] Phase 4: Design Patterns & Resilience
-- [ ] Phase 5: Architecture Patterns
-- [ ] Phase 6: Security & Observability
-- [ ] Phase 7: Performance & Optimization
-- [ ] Phase 8: Storage Systems
-- [ ] Phase 9: Java-Specific Deep Dive
-- [ ] Phase 10: Distributed Systems
-- [ ] Phase 11: Real-World System Design Cases
+* [ ] `rest-api-design`
+* [ ] `api-versioning`
+* [ ] `pagination`
+* [ ] `idempotency`
+* [ ] `graphql`
+* [ ] `grpc`
 
 ---
+
+### Asynchronous Communication
+
+📁 `messaging/`
+
+* [ ] `kafka`
+* [ ] `rabbitmq`
+* [ ] `pub-sub-pattern`
+* [ ] `message-queue-vs-event-streaming`
+* [ ] `at-least-once-vs-at-most-once`
+* [ ] `exactly-once`
+* [ ] `message-ordering`
+* [ ] `consumer-groups`
+* [ ] `event-schema-evolution`
+* [ ] `outbox-pattern`
+* [ ] `transactional-messaging`
+* [ ] `dead-letter-queue`
+* [ ] `replayability`
+
+📌 **Goal**: Build resilient, decoupled systems.
+
+---
+
+## Phase 5: Design Patterns & Resilience
+
+📁 `design-patterns/`
+
+* [ ] `singleton`
+* [ ] `factory`
+* [ ] `strategy`
+* [ ] `circuit-breaker`
+* [ ] `retry-pattern`
+* [ ] `bulkhead`
+* [ ] `rate-limiting`
+* [ ] `load-balancing`
+* [ ] `backpressure`
+
+📌 **Goal**: Survive partial failures.
+
+---
+
+## Phase 6: Architecture Patterns
+
+📁 `architecture-patterns/`
+
+* [ ] `monolith-vs-microservices`
+* [ ] `database-per-service`
+* [ ] `shared-database-anti-pattern`
+* [ ] `sync-vs-async-communication`
+* [ ] `event-driven-architecture`
+* [ ] `cqrs`
+* [ ] `saga-pattern`
+* [ ] `choreography-vs-orchestration`
+* [ ] `api-gateway`
+* [ ] `service-mesh`
+* [ ] `backend-for-frontend`
+* [ ] `hexagonal-architecture`
+* [ ] `strangler-fig-pattern`
+
+📌 **Goal**: Choose the right architecture at the right time.
+
+---
+
+## Phase 7: Security & Observability
+
+### Security
+
+📁 `security/`
+
+* [ ] `authentication-vs-authorization`
+* [ ] `oauth2-jwt`
+* [ ] `token-expiry-refresh`
+* [ ] `mTLS`
+* [ ] `api-security`
+* [ ] `secrets-management`
+* [ ] `encryption`
+* [ ] `zero-trust-architecture`
+* [ ] `ddos-protection`
+
+---
+
+### Observability
+
+📁 `observability/`
+
+* [ ] `structured-logging`
+* [ ] `log-correlation`
+* [ ] `monitoring`
+* [ ] `metrics`
+* [ ] `golden-signals`
+* [ ] `distributed-tracing`
+* [ ] `health-checks`
+* [ ] `alert-fatigue`
+* [ ] `slo-error-budgets`
+
+📌 **Goal**: Understand production behavior.
+
+---
+
+## Phase 8: Performance & Optimization
+
+📁 `performance/`
+
+* [ ] `bottleneck-identification`
+* [ ] `optimization-techniques`
+* [ ] `database-query-optimization`
+* [ ] `async-vs-blocking-io`
+* [ ] `reactive-vs-imperative`
+
+---
+
+## Phase 9: Java-Specific Deep Dive
+
+📁 `java-specific/`
+
+* [ ] `spring-boot-architecture`
+* [ ] `spring-cache-internals`
+* [ ] `microservices-with-spring-cloud`
+* [ ] `java-concurrency`
+* [ ] `thread-pools`
+* [ ] `jvm-memory-model`
+* [ ] `gc-algorithms`
+* [ ] `jvm-performance-tuning`
+* [ ] `memory-leaks`
+
+📌 **Goal**: Connect JVM internals to system behavior.
+
+---
+
+## Phase 10: Distributed Systems
+
+📁 `distributed-systems/`
+
+* [ ] `consensus-algorithms`
+* [ ] `leader-election`
+* [ ] `quorum`
+* [ ] `split-brain`
+* [ ] `distributed-locks`
+* [ ] `distributed-transactions`
+* [ ] `vector-clocks`
+* [ ] `gossip-protocol`
+
+📌 **Goal**: Think like a distributed systems engineer.
+
+---
+
+## Phase 11: Real-World System Design Cases
+
+📁 `system-design-cases/`
+
+* [ ] `url-shortener`
+* [ ] `rate-limiter-design`
+* [ ] `notification-system`
+* [ ] `file-upload-download-system`
+* [ ] `distributed-cache-design`
+* [ ] `payment-processing-system`
+* [ ] `bank-statement-processing-system`
+* [ ] `multi-tenant-saas-design`
+
+📌 **Goal**: Practice end-to-end designs.
+
+---
+
+## Phase 12: Cloud & Infrastructure
+
+📁 `cloud-infrastructure/`
+
+### Containers & Orchestration
+
+* [ ] `docker-fundamentals`
+* [ ] `kubernetes-basics`
+* [ ] `kubernetes-advanced`
+* [ ] `helm-charts`
+
+### Cloud Providers
+
+* [ ] `aws-fundamentals`
+* [ ] `azure-basics`
+* [ ] `gcp-overview`
+* [ ] `cloud-databases`
+* [ ] `cloud-storage-patterns`
+
+### Infrastructure as Code & DevOps
+
+* [ ] `terraform`
+* [ ] `cloudformation`
+* [ ] `ansible`
+* [ ] `gitops`
+* [ ] `ci-cd-pipelines`
+* [ ] `blue-green-deployment`
+* [ ] `canary-releases`
+* [ ] `feature-flags`
+* [ ] `auto-scaling`
+* [ ] `elastic-load-balancing`
+
+📌 **Goal**: Build cloud-native systems.
+
+---
+
+## Progress Checklist
+
+* [ ] Phase 1: Foundations
+* [ ] Phase 2: Storage & Data
+* [ ] Phase 3: Caching
+* [ ] Phase 4: Messaging
+* [ ] Phase 5: Design Patterns
+* [ ] Phase 6: Architecture
+* [ ] Phase 7: Security & Observability
+* [ ] Phase 8: Performance
+* [ ] Phase 9: Java Deep Dive
+* [ ] Phase 10: Distributed Systems
+* [ ] Phase 11: System Design Cases
+* [ ] Phase 12: Cloud & Infrastructure
+
+---
+
