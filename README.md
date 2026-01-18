@@ -128,19 +128,18 @@
 
 📁 `caching/`
 
-* [ ] `redis-basics`
-* [ ] `local-vs-distributed-cache`
-* [ ] `two-level-cache`
-* [ ] `cache-aside`
-* [ ] `read-through`
-* [ ] `write-through`
-* [ ] `write-behind`
-* [ ] `cache-invalidation`
-* [ ] `cache-eviction-policies`
-* [ ] `cache-warming`
-* [ ] `cache-stampede`
-* [ ] `cache-penetration`
-* [ ] `multi-tenant-caching`
+* [✅] `redis-basics`
+* [✅] `local-vs-distributed-cache`
+* [✅] `two-level-cache`
+* [✅] `cache-aside`
+* [✅] `read-through`
+* [✅] `write-through`
+* [✅] `write-behind`
+* [✅] `cache-invalidation`
+* [✅] `cache-eviction-policies`
+* [✅] `cache-stampede`
+* [✅] `cache-penetration`
+* [✅] `multi-tenant-caching`
 
 📌 **Goal**: Reduce latency and DB load safely.
 
@@ -363,7 +362,7 @@
 
 * [ ] Phase 1: Foundations
 * [ ] Phase 2: Storage & Data
-* [ ] Phase 3: Caching
+* [✅] Phase 3: Caching
 * [ ] Phase 4: Messaging
 * [ ] Phase 5: Design Patterns
 * [ ] Phase 6: Architecture
