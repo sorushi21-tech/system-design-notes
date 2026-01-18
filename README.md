@@ -128,19 +128,18 @@
 
 📁 `caching/`
 
-* [ ] `redis-basics`
-* [ ] `local-vs-distributed-cache`
-* [ ] `two-level-cache`
-* [ ] `cache-aside`
-* [ ] `read-through`
-* [ ] `write-through`
-* [ ] `write-behind`
-* [ ] `cache-invalidation`
-* [ ] `cache-eviction-policies`
-* [ ] `cache-warming`
-* [ ] `cache-stampede`
-* [ ] `cache-penetration`
-* [ ] `multi-tenant-caching`
+* [✅] `redis-basics`
+* [✅] `local-vs-distributed-cache`
+* [✅] `two-level-cache`
+* [✅] `cache-aside`
+* [✅] `read-through`
+* [✅] `write-through`
+* [✅] `write-behind`
+* [✅] `cache-invalidation`
+* [✅] `cache-eviction-policies`
+* [✅] `cache-stampede`
+* [✅] `cache-penetration`
+* [✅] `multi-tenant-caching`
 
 📌 **Goal**: Reduce latency and DB load safely.
 
