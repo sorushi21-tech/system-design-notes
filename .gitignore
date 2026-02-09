@@ -1,0 +1,154 @@
+# Build artifacts
+HELP.md
+target/
+build/
+dist/
+*.jar
+*.war
+*.zip
+*.tar.gz
+!**/src/main/**/target/
+!**/src/test/**/target/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+# Maven
+.mvn/wrapper/maven-wrapper.jar
+*.mvn
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.versionsBackup
+pom.xml.bak
+release.properties
+dependency-reduced-pom.xml
+buildNumber.properties
+.mvn/timing.properties
+.mvn/wrapper/maven-wrapper.properties
+
+### IDEs ###
+# STS (Spring Tool Suite)
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+# IntelliJ IDEA
+.idea/
+*.iws
+*.iml
+*.ipr
+*.iml
+out/
+
+# NetBeans
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+# VS Code
+.vscode/
+.vscode-test/
+*.code-workspace
+
+# Other editors
+.sublime-project
+.sublime-workspace
+.vimrc
+.netrwhist
+
+# OS specific files
+### Windows ###
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+
+### macOS ###
+.DS_Store
+.AppleDouble
+.LSOverride
+*.swp
+*.swo
+*~
+
+### Linux ###
+.directory
+
+# Environment files
+.env
+.env.local
+.env.*.local
+.properties
+
+# Logging
+*.log
+logs/
+log/
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+*.h2.db
+*.h2.mv.db
+
+# IDE temp files
+*.tmp
+*.bak
+*.backup
+*.swp
+*.swo
+*~
+
+# Compilation
+*.class
+*.ctxt
+
+# Package Files
+*.jar
+*.war
+*.nar
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+# Node (if used with frontend build tools)
+node_modules/
+npm-debug.log
+yarn-error.log
+
+# Gradle (if needed in future)
+.gradle/
+!gradle/wrapper/gradle-wrapper.jar
+gradlew
+gradlew.bat
+
+# OSGi (if needed)
+.classpath
+
+# Maven Shade plugin
+dependency-reduced-pom.xml
+
+# IntelliJ
+*.idea/
+*.gradle
+.gradle
+
+# Misc
+.cache
+*.orig
+.test-results/
+target/
+.classpath
+.project
+.settings/
