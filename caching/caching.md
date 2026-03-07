@@ -22,7 +22,8 @@
 
 # 01. Caching Fundamentals
 
-- Caching is the practice of storing copies of data in fast-access storage so future requests can be served faster — without going back to the original (slower) data source, typically a database.
+- Caching is the practice of storing copies of data in fast-access storage
+- So future requests can be served faster — without going back to the original (slower) data source, typically a database.
 
 ---
 
@@ -36,7 +37,8 @@ Every cache request results in one of two outcomes:
 | **Cache MISS** | Data not found — query DB, then store result in cache | ~ 50 – 100 ms | One DB query |
 | **Cold MISS**  | Cache is empty (after restart / first deploy)         | DB latency    | 100% DB load |
 
-**Hit Rate** — The percentage of requests served from cache. Target: **80–95%+**. A 95% hit rate means only 5 in 100 requests reach the database.
+**Hit Rate** — The percentage of requests served from cache. 
+- Target: **80–95%+**. A 95% hit rate means only 5 in 100 requests reach the database.
 
 ---
 
@@ -117,10 +119,6 @@ Scalability:    Horizontal scaling feasible without scaling DB proportionally
 
 ---
 
-![Caching Diagram](cache.drawio.png)
-
----
-
 # 02. Local vs Distributed Cache
 
 One of the first architectural decisions when designing a caching layer is: 
@@ -191,7 +189,7 @@ One of the first architectural decisions when designing a caching layer is:
 
 ---
 
-## 2.3 Direct Comparison
+## 2.3 Comparison between L1 and L2 cache
 
 | Aspect              | Local Cache (L1)         | Distributed Cache (L2) |
 |---------------------|--------------------------|------------------------|
@@ -200,24 +198,29 @@ One of the first architectural decisions when designing a caching layer is:
 | Network Required    | No                       | Yes                    |
 | Consistency         | Per-server (can differ)  | Shared (all same)      |
 | Memory Capacity     | Limited (MBs)            | Scalable (GBs)         |
-| Setup Complexity    | Low                      | Medium–High            |
 | Cost                | Free (uses existing RAM) | Extra infra cost       |
 | Global Invalidation | Hard (per-server only)   | Easy (delete once)     |
 | Survives Restart    | No (empty on restart)    | Yes (with persistence) |
 | Data Sharing        | No (isolated per server) | Yes                    |
 
-**Summary:** Local Cache wins on speed, simplicity, cost. Distributed Cache wins on consistency, storage capacity, sharing.
+**Summary:** 
+- Local Cache wins on speed, simplicity, cost. 
+- Distributed Cache wins on consistency, storage capacity, sharing.
 
 ---
 
-## 2.4 Multi-Level Caching (L1 + L2) — Best of Both Worlds
+## 2.4 Multi-Level Caching (L1 + L2)
 
 Use both layers simultaneously. Check L1 first (ultra-fast), then L2 (shared), then database (slow).
 
 ```
 Read Flow:
   Step 1: Check L1 (Local Cache)  →  HIT? Return immediately       (~0.1 ms)
+        |
+        |
   Step 2: Check L2 (Redis)        →  HIT? Save to L1 too, return   (~2 ms)
+        |
+        |
   Step 3: Query Database          →  Save to L2 AND L1, return     (~50 ms)
 
 Target Hit Rates:
@@ -228,7 +231,7 @@ Target Hit Rates:
 
 ### The Invalidation Problem with Multi-Level Cache
 
-Server A updates a key and clears its L1 + L2. But Servers B and C still have stale data in their local L1 cache!
+Server A updates a key and clears its L1 + L2. But Servers B and C still have stale data in their local L1 cache.
 
 **Solution: Redis Pub/Sub for L1 Invalidation**
 
@@ -258,7 +261,8 @@ Servers B and C (subscribed to "cache:invalidate"):
 
 # 03. Redis Basics
 
-Redis (Remote Dictionary Server) is an open-source, in-memory data structure store used as a cache, database, and message broker. It is the most widely used distributed cache in production systems today.
+- Redis (Remote Dictionary Server) is an open-source, in-memory data structure store used as a cache, database, and message broker. 
+- It is the most widely used distributed cache in production systems today.
 
 ---
 
@@ -279,16 +283,16 @@ Redis (Remote Dictionary Server) is an open-source, in-memory data structure sto
 
 ## 3.2 Redis Data Structures — When to Use Each
 
-| Type            | Use Case                                      | Key Commands                | Example                         |
-|-----------------|-----------------------------------------------|-----------------------------|---------------------------------|
-| **String**      | Simple cache values, counters, session tokens | GET, SET, INCR, EXPIRE      | Cache JSON blob, OTP storage    |
-| **Hash**        | Object/record with multiple fields            | HGET, HSET, HMGET, HGETALL  | User profile (name, email, age) |
-| **List**        | Queues, recent activity feeds (ordered)       | LPUSH, RPUSH, LPOP, LRANGE  | Recent 10 orders for user       |
-| **Set**         | Unique items, membership checks               | SADD, SMEMBERS, SISMEMBER   | Set of active session IDs       |
-| **Sorted Set**  | Ranked lists, leaderboards                    | ZADD, ZRANGE, ZRANK, ZSCORE | Top 10 products by sales rank   |
-| **Bitmap**      | Compact boolean flags                         | SETBIT, GETBIT, BITCOUNT    | User login streak tracking      |
-| **HyperLogLog** | Approximate unique count (memory-efficient)   | PFADD, PFCOUNT              | Unique visitors per day         |
-| **Stream**      | Append-only log, event streaming              | XADD, XREAD, XGROUP         | Audit logs, event sourcing      |
+| Type            | Use Case                                      | Example                         |
+|-----------------|-----------------------------------------------|---------------------------------|
+| **String**      | Simple cache values, counters, session tokens | Cache JSON blob, OTP storage    |
+| **Hash**        | Object/record with multiple fields            | User profile (name, email, age) |
+| **List**        | Queues, recent activity feeds (ordered)       | Recent 10 orders for user       |
+| **Set**         | Unique items, membership checks               | Set of active session IDs       |
+| **Sorted Set**  | Ranked lists, leaderboards                    | Top 10 products by sales rank   |
+| **Bitmap**      | Compact boolean flags                         | User login streak tracking      |
+| **HyperLogLog** | Approximate unique count (memory-efficient)   | Unique visitors per day         |
+| **Stream**      | Append-only log, event streaming              | Audit logs, event sourcing      |
 
 ---
 
@@ -350,9 +354,15 @@ When Redis reaches its `maxmemory` limit, it decides which keys to remove:
 
 ---
 
+![Caching Diagram](cache.drawio.png)
+
+---
+
 # 04. Cache-Aside (Lazy Loading)
 
-Cache-Aside is the most widely used caching pattern. The application itself is fully responsible for managing the cache — checking it, populating it, and invalidating it. The cache sits "beside" the flow, not in it.
+- Cache-Aside is the most widely used caching pattern.
+- The application itself is fully responsible for managing the cache — checking it, populating it, and invalidating it.
+- The cache sits "beside" the flow, not in it.
 
 ---
 
@@ -383,7 +393,8 @@ Step 4: Return success
 Next read for this key: cache miss → fetches fresh data from DB → repopulates cache
 ```
 
-> **Why DELETE instead of UPDATE?** Avoids race conditions where a slow read thread writes a stale value AFTER a write thread has already invalidated the cache.
+> **Why DELETE instead of UPDATE ?** 
+> - Avoids race conditions where a slow read thread writes a stale value AFTER a write thread has already invalidated the cache.
 
 ---
 
@@ -502,7 +513,8 @@ Instead of 100 separate cache.get() calls for 100 keys, use `cache.multiGet(ids)
 
 # 05. Read-Through Cache Pattern
 
-In Read-Through, the cache layer itself handles loading data from the database on a miss. The application only talks to the cache — it has no direct dependency on the database for reads.
+- In Read-Through, the cache layer itself handles loading data from the database on a miss. 
+- The application only talks to the cache — it has no direct dependency on the database for reads.
 
 ---
 
@@ -534,7 +546,7 @@ KEY POINT: App never calls database directly. Cache handles everything.
 
 ## 5.3 Setup — Loader Function
 
-You configure a "loader function" once at startup. The cache calls this function whenever there is a miss:
+Configure a "loader function" once at startup. The cache calls this function whenever there is a miss:
 
 ```java
 // Java — Caffeine LoadingCache
@@ -550,8 +562,6 @@ Product product = productCache.get(sku);   // Cache handles miss automatically
 
 **Popular Libraries Supporting Read-Through:**
 - Java: Caffeine LoadingCache, Guava LoadingCache, Spring `@Cacheable`, Ehcache
-- Python: `cachetools` with cached decorator
-- Go: `groupcache`
 
 ---
 
@@ -603,7 +613,9 @@ Result: Popular keys NEVER expire for the user. Zero miss penalty on hot data.
 
 # 06. Write-Through Cache Pattern
 
-In Write-Through, every write operation updates both the cache AND the database synchronously. Success is returned only after both have been updated. The cache always matches the database — no stale data ever.
+- In Write-Through, every write operation updates both the cache AND the database synchronously. 
+- Success is returned only after both have been updated. 
+- The cache always matches the database — no stale data ever.
 
 ---
 
@@ -659,7 +671,7 @@ Read Flow:
 ## 6.4 Decision Framework
 
 ```
-Is your workload read-heavy (reads > writes)?
+Is workload is read-heavy (reads > writes)?
   YES → Is strong consistency required?
           YES → Use WRITE-THROUGH
           NO  → Use CACHE-ASIDE
@@ -690,7 +702,9 @@ Also consider:
 
 # 07. Write-Behind (Write-Back) Cache Pattern
 
-In Write-Behind, writes go to the cache immediately and the application gets an instant success response. The database is updated later, asynchronously by a background worker. This prioritizes write speed over immediate durability.
+- In Write-Behind, writes go to the cache immediately and the application gets an instant success response. 
+- The database is updated later, asynchronously by a background worker. 
+- This prioritizes write speed over immediate durability.
 
 ---
 
@@ -709,7 +723,7 @@ Client latency: 2ms  vs  Write-Through: 52ms  =  26x faster writes!
 
 ---
 
-## 7.2 Write Coalescing — The Hidden Superpower
+## 7.2 Write Coalescing
 
 Multiple updates to the same key get merged: only the FINAL value is written to the database. This can reduce DB writes by 90%+ for frequently updated keys.
 
@@ -780,11 +794,11 @@ DB write reduction: 66% in this example, often 90%+ in real systems (e.g., view 
 
 # 08. Cache Eviction Policies
 
-When cache memory is full, the eviction policy decides which keys to remove to make space for new ones. Choosing the right policy directly impacts your cache hit rate and overall system performance.
+- When cache memory is full, the eviction policy decides which keys to remove to make space for new ones. 
 
 ---
 
-## 8.1 Policy Comparison at a Glance
+## 8.1 Policy Comparison
 
 | Policy        | Eviction Rule                                           | Hit Rate | Memory Overhead | Best For                             |
 |---------------|---------------------------------------------------------|----------|-----------------|--------------------------------------|
@@ -798,8 +812,8 @@ When cache memory is full, the eviction policy decides which keys to remove to m
 
 ## 8.2 LRU — Least Recently Used (The Default)
 
-Evicts the item that has not been accessed for the longest time. Based on the principle of **temporal locality**: if you used something recently, you will likely use it again soon.
-
+- Evicts the item that has not been accessed for the longest time.
+- 
 ```
 Cache state (left = oldest, right = newest):  [A, B, C, D, E]
 
@@ -816,7 +830,8 @@ Add G:      [E, B, F, D, G]   ← C evicted
 
 ## 8.3 LFU — Least Frequently Used
 
-Evicts the item with the fewest total accesses over its lifetime. Protects truly popular data even if not accessed in the last few seconds.
+- Evicts the item with the fewest total accesses over its lifetime.
+- Protects truly popular data even if not accessed in the last few seconds.
 
 ```
 Cache: [(A: 5 accesses), (B: 3), (C: 10), (D: 2), (E: 7)]
@@ -869,9 +884,8 @@ maxmemory-samples 5    # samples 5 random keys, evicts least recently used
 
 # 09. Cache Invalidation
 
-> *"There are only two hard things in Computer Science: cache invalidation and naming things."* — Phil Karlton
-
-Cache invalidation is the act of ensuring cached data does not lie. The cache is a copy of truth (the database). The moment the original changes, the copy becomes potentially wrong.
+- Cache invalidation is the act of ensuring cached data does not lie. 
+- The cache is a copy of truth (the database). The moment the original changes, the copy becomes potentially wrong.
 
 ---
 
@@ -929,7 +943,7 @@ Rule: On writes, always DELETE (invalidate) the cache key. NEVER UPDATE it.
 
 ## 9.4 Distributed Invalidation (Multi-Server)
 
-When multiple app servers have local L1 caches, deleting a key on one server does not delete it on others. You need a broadcast mechanism.
+When multiple app servers have local L1 caches, deleting a key on one server does not delete it on others.
 
 ```
 Solution: Redis Pub/Sub for L1 Invalidation
@@ -999,7 +1013,8 @@ Microservices with CDC (Kafka/Debezium)?       → Event-based with message queu
 
 # 10. Cache Penetration
 
-Cache penetration occurs when requests repeatedly query for data that does not exist anywhere — not in cache, not in the database. Because it can never be cached, every request hits the database and cache provides zero protection.
+- Cache penetration occurs when requests repeatedly query for data that does not exist anywhere — not in cache, not in the database. 
+- Because it can never be cached, every request hits the database and cache provides zero protection.
 
 ---
 
@@ -1116,7 +1131,8 @@ Most attacks are stopped at Layer 3 without touching cache or DB.
 
 # 11. Cache Stampede (Thundering Herd)
 
-Cache stampede occurs when many requests simultaneously miss the same cache key and all attempt to rebuild it by querying the database at once. One expired key can generate hundreds or thousands of concurrent DB queries.
+- Cache stampede occurs when many requests simultaneously miss the same cache key and all attempt to rebuild it by querying the database at once. 
+- One expired key can generate hundreds or thousands of concurrent DB queries.
 
 ---
 
@@ -1227,7 +1243,8 @@ Best for: Predictable hot data like dashboards, trending lists, config values
 
 # 12. Multi-Tenant Caching
 
-In a multi-tenant system, a single application instance serves multiple customers (tenants). The critical requirement: cached data from one tenant must **NEVER** be visible to another tenant.
+- In a multi-tenant system, a single application instance serves multiple customers (tenants). 
+- The critical requirement: cached data from one tenant must **NEVER** be visible to another tenant.
 
 ---
 
@@ -1261,8 +1278,8 @@ Bulk invalidation for one tenant:
   DEL all matched keys              → full tenant cache clear
 ```
 
-**Pros:** Simple, works with Redis/Caffeine/Memcached, easy per-tenant invalidation
-**Cons:** Logical isolation only; one noisy tenant can evict others via LRU
+- **Pros:** Simple, works with Redis/Caffeine/Memcached, easy per-tenant invalidation
+- **Cons:** Logical isolation only; one noisy tenant can evict others via LRU
 
 ---
 
@@ -1292,7 +1309,9 @@ Each tenant gets their own Redis instance — maximum isolation, maximum cost.
 
 ## 12.5 Strategy 4: Hybrid Model (Recommended for SaaS)
 
-Small/medium tenants share a cache pool (with key prefixing). Large/enterprise tenants get dedicated instances. This is the most cost-effective architecture for SaaS platforms.
+- Small/medium tenants share a cache pool (with key prefixing). 
+- Large/enterprise tenants get dedicated instances. 
+- This is the most cost-effective architecture for SaaS platforms.
 
 ```
 Tenant size < 1000 users       → Shared cache pool with tenant-aware keys
@@ -1306,7 +1325,7 @@ This is how Salesforce, Shopify, and most SaaS platforms approach it.
 
 ---
 
-## 12.6 Cache Fairness and Memory Control (Noisy Neighbor Problem)
+## 12.6 Cache Fairness and Memory Control
 
 In a shared cache, a single large tenant can fill the entire cache and evict all other tenants' data.
 
@@ -1364,7 +1383,7 @@ Compliance:      Cache contents encrypted at rest (tenant data isolation)
 
 ---
 
-# Architect Quick Reference — Decision Guides
+# Architect Decision Guides
 
 ## Pattern Selection Matrix
 
