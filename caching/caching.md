@@ -354,7 +354,7 @@ When Redis reaches its `maxmemory` limit, it decides which keys to remove:
 
 ---
 
-![Caching Diagram](cache.drawio.png)
+![Caching Diagram](../images/cache.drawio.png)
 
 ---
 
