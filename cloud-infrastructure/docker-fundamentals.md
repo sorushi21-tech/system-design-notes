@@ -2,11 +2,11 @@
 
 ## 1. What is Docker?
 
-- Docker is a containerization platform that packages applications and their dependencies into a standardized unit called a **container**. 
+- Docker is a containerization platform that packages applications and their dependencies into a standardized unit called a **container**.
 - It ensures consistency across different environments
 ---
 
-## 2. Why do Developers use Docker?
+## 2. Why docker is used ?
 
 * **Environment consistency** – dev, test, and prod run identically
 * **Dependency encapsulation** – JDK, libraries, and runtime are bundled inside the container; no system-level conflicts
@@ -21,18 +21,21 @@
 
 ### Image
 
-* **Blueprint** of application with all dependencies, code, runtime, and configuration
-* **Built once, reused many times** – create the image once, run it in multiple containers
-* **Read-only** – images don't change; containers create a writable layer on top
-* Contains layered filesystems for efficient storage and reuse
+An image is the **blueprint** of an application. It contains all dependencies, application code, runtime, and configuration needed to run the application.
+
+- Built once, reused across many containers
+- **Read-only** — images themselves never change; a container adds a writable layer on top
+- Composed of layered filesystems, which allows efficient storage and reuse of common layers
+
 
 ### Container
 
-* **Isolated running instance** of an image
+A container is an **isolated, running instance** of an image.
+
 * Lightweight and temporary; contains your actual application process
 * Each container has its own filesystem, network interface, and process space
 * Can be started, stopped, paused, and deleted without affecting other containers
-* Multiple containers can run from the same image
+* Multiple containers can be created from the same image simultaneously
 
 ### Dockerfile
 
@@ -54,28 +57,34 @@
 
 ### Networks
 
-* **Enable communication** between containers and external systems
-* Container services automatically discover each other by name on the same network
-* **Types**: bridge (default), host, overlay (swarm), macvlan
-* Essential in microservices architectures where services need to communicate with each other
+Docker networks **enable communication** between containers and external systems. Services on the same Docker network automatically discover each other by container name.
+
+| Network Type | Description                                                   |
+|--------------|---------------------------------------------------------------|
+| `bridge`     | Default; containers on an isolated network, NAT'd to the host |
+| `host`       | Container shares the host's network stack; no isolation       |
+| `overlay`    | Multi-host networking for Docker Swarm / Kubernetes           |
+| `macvlan`    | Assigns a MAC address to the container; for legacy use cases  |
+
 
 ---
 
 ## 4. Architecture
-- **High-level Architecture** →  
-Docker’s higher level of architecture revolves around a client-server model, where the client interacts with the Docker daemon (server) to manage containers and related resources. 
-- At its core, Docker consists of three key components: the client, the daemon, and images. 
+- **High-level Architecture** -→ Docker’s higher level of architecture revolves around a client-server model, where the client interacts with the Docker daemon (server) to manage containers and related resources.
+- At its core, Docker consists of three key components: the client, the daemon, and images.
 - Client and daemon communicate using a REST API, over UNIX sockets or a network interface.
 
-![img.png](img.png)
+![img.png](../images/img.png)
 
-* **Docker Client** → is a command-line tool, API, or graphical interface that users interact with to issue commands and manage Docker resources. The client sends requests to the Docker daemon, which orchestrates the execution of those commands.
-* **Docker Daemon** → also known as Docker Engine, is a background service and long-running process that runs on the host machine and actually does the work of running and managing both containers and container images. The Docker daemon is responsible for managing the lifecycle of containers and orchestrating their operations. It listens for requests from the Docker client, manages containers, and coordinates various Docker operations. The daemon interacts with the host operating system’s kernel and leverages kernel features and modules for containerization, networking, and storage.
-* **Registry** → stores images
-* **Objects** → images, containers, volumes, networks
+* **Docker Client** → is a command-line tool, API, or GUI that users interact with to issue commands and manage Docker resources. The client sends requests to the Docker daemon, which orchestrates the execution of those commands.
+* **Docker Daemon (`dockerd`)** → also known as Docker Engine, is a background service and long-running process that runs on the host machine and actually does the work of running and managing both containers and container images. The Docker daemon is responsible for managing the lifecycle of containers and orchestrating their operations. It listens for requests from the Docker client, manages containers, and coordinates various Docker operations. The daemon interacts with the host operating system’s kernel and leverages kernel features and modules for containerization, networking, and storage.
+*  **Registry** → stores and serves Docker images. The daemon pulls images from the registry and pushes built images to it.
+* **Objects** → images, containers, volumes, and networks are collectively referred to as Docker objects.
 ---
 
 ## 5. Workflow
+
+![docker_architecture.drawio.svg](../images/docker_architecture.drawio.svg)
 
 1. **Write `Dockerfile`** – define how to build application image
 2. **Build image** – compile the image from Dockerfile
@@ -127,22 +136,26 @@ docker exec -it <container-id> /bin/bash  # Execute command inside running conta
 docker inspect <container-id>             # Detailed container information
 ```
 
+**Docker chain command**
+
+
+
 ---
 
-## 7. Dockerfile
+## 7. Dockerfile Instructions
 
-**Instructions:**
-
-* **`FROM`** – base image to build upon (e.g., `openjdk:17`, `ubuntu:22.04`); must be first instruction
-* **`RUN`** – execute commands during build (install dependencies, compile, etc.); each RUN creates a layer
-* **`COPY`** – copy files from host into the image
-* **`ADD`** – like COPY but can also download from URLs and extract archives (use COPY when possible)
-* **`WORKDIR`** – set working directory for subsequent instructions
-* **`CMD`** – default command to run when container starts (can be overridden)
-* **`ENTRYPOINT`** – configure container as executable; combined with CMD for flexibility
-* **`EXPOSE`** – document which ports the app listens on (doesn't actually open ports)
-* **`ENV`** – set environment variables inside the image
-* **`ARG`** – build-time variables (not available at runtime)
+| Instruction  | Purpose                                                                                         |
+|--------------|-------------------------------------------------------------------------------------------------|
+| `FROM`       | Specifies the base image; must be the first instruction                                         |
+| `RUN`        | Executes a command during the build; each `RUN` creates a new layer                             |
+| `COPY`       | Copies files from the host into the image                                                       |
+| `ADD`        | Like `COPY` but also supports URL downloads and archive extraction; prefer `COPY` when possible |
+| `WORKDIR`    | Sets the working directory for all subsequent instructions                                      |
+| `CMD`        | Default command executed when the container starts; can be overridden at runtime                |
+| `ENTRYPOINT` | Configures the container as an executable; combined with `CMD` for flexibility                  |
+| `EXPOSE`     | Documents the port the application listens on (informational only; does not publish the port)   |
+| `ENV`        | Sets environment variables inside the image, available at runtime                               |
+| `ARG`        | Defines build-time variables; not available after build                                         |
 
 ---
 
@@ -202,9 +215,10 @@ ENTRYPOINT ["java", "-jar", "app.jar"]
 ## 9. Docker Compose & Multi-Container Applications
 
 **What is Docker Compose?**
-- Defines and runs multiple containers as a single service
-- Uses YAML configuration files (`docker-compose.yml`)
-- Ideal for microservices: app + database + cache + message queue
+- Docker Compose defines and manages multiple containers as a single application using a YAML configuration file (`docker-compose.yml`).
+- It is the standard approach for running multi-service stacks locally
+- like, a Spring Boot application alongside a MySQL database, Redis cache, and a message queue.
+
 
 **Basic docker-compose.yml:**
 ```yaml
@@ -267,7 +281,10 @@ docker-compose exec app bash         # Execute command in service
 
 ## 10. Container Resource Management & JVM Tuning
 
-**Critical for Java applications to prevent OOMKill**
+**Critical for Java applications to prevent `OOMKill` (out-of-memory termination by the OS)**
+
+### JVM Memory Layout Inside a Container
+![jvm_memory_layout.drawio.png](../images/jvm_memory_layout.drawio.png)
 
 **Memory limits:**
 ```bash
@@ -294,6 +311,9 @@ services:
 - Formula: `Xmx` ≤ (container limit - 25%)
 - Example: For 1GB container → `Xmx=768m`
 
+
+`-XX:MaxRAMPercentage` allows the JVM to automatically calculate heap size based on the container's detected memory limit, making it preferable for dynamic environments.
+
 **Memory Flags for Containers:**
 ```dockerfile
 ENV JAVA_OPTS="-Xmx512m -Xms256m \
@@ -311,6 +331,9 @@ docker inspect <container-id>        # Detailed container info
 ---
 
 ## 11. Health Checks & Readiness/Liveness Probes
+
+### Health Check Sequence
+![healthcheck.pmg](../images/healthcheck.png)
 
 **Docker HEALTHCHECK instruction:**
 ```dockerfile
@@ -368,10 +391,9 @@ services:
       retries: 5
 ```
 
-**Kubernetes Readiness/Liveness:**
-- Docker health checks prepare you for K8s probes
-- Readiness: Is the service ready to accept traffic?
-- Liveness: Is the service still running?
+> - Docker health checks map directly to Kubernetes liveness and readiness probes.
+> - **Readiness** answers: is the service ready to accept traffic?
+> - **Liveness** answers: is the service still running and not deadlocked?
 
 ---
 
@@ -418,6 +440,8 @@ docker run --dns-search=example.com my-app
 ---
 
 ## 13. Logging & Observability
+
+![docker_log_flow.pmg](../images/docker_log_flow.png)
 
 **Container logging basics:**
 ```bash
@@ -581,25 +605,33 @@ target/
 .vscode/
 ```
 
+A well-configured `.dockerignore` can reduce the build context from hundreds of megabytes to a few megabytes, significantly speeding up builds.
+
+
 **Build context optimization:**
 - Reduce files sent to Docker daemon
 - Decreases build time
 - Example: `.dockerignore` can reduce context from 500MB to 50MB
 
 **Layer caching mechanics:**
+
+Docker caches each layer. When a layer changes, all subsequent layers are invalidated and rebuilt. Instructions should be ordered from **least to most frequently changed**.
+
+![docker_layer_cache.png](../images/docker_layer_cache.png)
+
 ```dockerfile
-# INEFFICIENT: Single RUN creates one layer, invalidates cache if code changes
-FROM openjdk:17-slim
+# INEFFICIENT: Any code change invalidates dependency download
+FROM maven:3.9-openjdk-17
 COPY . .
 RUN mvn clean package
 
-# EFFICIENT: Separate dependency and build layers
+# EFFICIENT: Dependencies are cached separately; only rebuilt when pom.xml changes
 FROM maven:3.9-openjdk-17 AS builder
 COPY pom.xml .
-RUN mvn dependency:go-offline      # Cache dependencies separately
+RUN mvn dependency:go-offline
 
 COPY src ./src
-RUN mvn clean package               # Only rebuild when src changes
+RUN mvn clean package
 
 FROM openjdk:17-slim
 COPY --from=builder /build/target/app.jar app.jar
@@ -625,6 +657,8 @@ docker-compose build
 ---
 
 ## 16. Debugging & Troubleshooting
+
+![docker_clean.png](../images/docker_clean.png)
 
 **Common debugging techniques:**
 ```bash
@@ -675,6 +709,8 @@ docker exec -it <container> ls -la /app
 ---
 
 ## 17. CI/CD Integration with Docker
+
+![cicd_vertical.png](../images/cicd_vertical.png)
 
 **GitHub Actions example:**
 ```yaml
@@ -829,6 +865,9 @@ class UserRepositoryTest {
 ```
 
 **Graceful shutdown in Spring Boot containers:**
+
+![graceful_shutdown_v2.png](../images/graceful_shutdown_v2.png)
+
 ```yaml
 # application.yml
 server:
@@ -864,8 +903,9 @@ ENTRYPOINT ["java", "-jar", "app.jar"]
 
 ## 20. Open Container Initiative (OCI)
 
-It is Open and vendor-neutral standards for container formats and runtimes. It ensures that container 
-technologies are portable, interoperable and not locked into a single vendor's ecosystem.
+- The Open Container Initiative (OCI) defines open, vendor-neutral standards for container **image formats** and **runtime behavior**.
+- It ensures that container technologies are portable and interoperable across different vendors and platforms.
+- Any OCI-compliant runtime (Docker, containerd, podman) can run any OCI-compliant image, preventing vendor lock-in.
 
 
 ## 21. Virtual Machine vs Container
@@ -896,31 +936,7 @@ technologies are portable, interoperable and not locked into a single vendor's e
 
 **Architectural Comparison:**
 
-```
-Virtual Machine Architecture:
-┌─────────────────┐
-│   Application   │
-├─────────────────┤
-│  Guest OS       │  ← Complete OS overhead
-├─────────────────┤
-│  Hypervisor     │
-├─────────────────┤
-│  Host OS        │
-├─────────────────┤
-│  Hardware       │
-└─────────────────┘
-
-Container Architecture:
-┌──────────┬──────────┬──────────┐
-│   App1   │   App2   │   App3   │
-├──────────┴──────────┴──────────┤
-│   Docker / Container Runtime   │
-├────────────────────────────────┤
-│   Host OS (Shared Kernel)      │  ← No OS duplication
-├────────────────────────────────┤
-│   Hardware                     │
-└────────────────────────────────┘
-```
+![vm_vs_container.png](../images/vm_vs_container.png)
 
 **Why Containers are More Efficient:**
 - **No OS duplication**: VMs each run a full OS (Windows, Linux, etc.); containers share the host kernel
@@ -1003,8 +1019,8 @@ Running 10 web server instances:
 | **User capability drop**    | Yes   | Yes       |
 | **Escape risk to host OS**  | Low   | Medium*   |
 
-- Containers share kernel; 
-- VM escape is harder. 
+- Containers share kernel;
+- VM escape is harder.
 - For untrusted workloads, run containers inside VMs.
 
 **Real-world Example: Spring Boot Application**
@@ -1032,35 +1048,3 @@ services:
 - Startup: 2-5 seconds
 - Resource per instance: 256MB
 - 4x more app instances on same hardware
-
-## Linux Concepts
-### Namespaces
-
-**What is a Namespace?**
-
-A namespace is a Linux kernel feature that **partitions/isolates kernel resources** so that one set of processes sees one set of resources while another set of processes sees a different set of resources. This creates the illusion of a complete, isolated system within each container.
-
-**How Docker Uses Namespaces:**
-
-Docker leverages namespaces to provide **process isolation** and create the boundary between containers. Each container gets its own set of namespaces, ensuring complete isolation at the OS level.
-
-**Types of Namespaces:**
-
-| Namespace      | Purpose                 | What Gets Isolated                                          |
-|----------------|-------------------------|-------------------------------------------------------------|
-| **PID**        | Process isolation       | Process IDs and process hierarchy                           |
-| **Network**    | Network isolation       | Network interfaces, routing tables, ports                   |
-| **Filesystem** | Mount isolation         | Mount points and filesystem views                           |
-| **User**       | User isolation          | User and group IDs (UID/GID)                                |
-| **IPC**        | Communication isolation | Inter-process communication (message queues, shared memory) |
-| **UTS**        | Hostname isolation      | Hostname and domain name                                    |
-| **Cgroup**     | Resource isolation      | CPU, memory, I/O limits                                     |
-
-**Example:**
-- Container A has PID 1 for its main process
-- Container B has PID 1 for its main process
-- Both can coexist because they're in different PID namespaces
-- From each container's perspective, it looks like a standalone system
-
-**Why It Matters for Docker:**
-Namespaces are the foundational technology that enables Docker containers to be **lightweight, isolated, and secure**—they share the host OS kernel but have completely separate views of system resources.
