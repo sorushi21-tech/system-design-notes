@@ -1,5 +1,4 @@
 # System Design Mastery Roadmap
-> **Java Developer → Solution Architect**
 
 ---
 
