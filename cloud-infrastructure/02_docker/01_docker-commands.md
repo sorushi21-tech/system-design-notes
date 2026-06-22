@@ -1,9 +1,5 @@
 # Docker Commands
 
-This note explains practical Docker commands in a step-by-step way. The goal is not to memorize every command, but to understand the workflow: build an image, run a container, inspect it, debug it, clean it up, and publish it.
-
-See [00_docker-fundamentals.md](00_docker-fundamentals.md) for core concepts.
-
 ## 1. Basic Command Pattern
 
 Most Docker commands follow this pattern:
