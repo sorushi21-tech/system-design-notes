@@ -269,7 +269,7 @@ docker network connect app-network my-app
 docker network inspect app-network
 ```
 
-Containers on the same user-defined bridge network can reach each other by container name. See [09_docker-networking.md](09_docker-networking.md) for more.
+Containers on the same user-defined bridge network can reach each other by container name.
 
 ---
 
@@ -345,14 +345,14 @@ docker volume inspect app-data
 docker volume rm app-data
 ```
 
-Be careful: removing a volume can delete persistent data. See [08_docker-storage.md](08_docker-storage.md) for storage patterns.
+Be careful: removing a volume can delete persistent data.
 
 
 ---
 
 ## 7. Docker Compose Workflow
 
-Compose runs multi-container applications. See [03_storage-networking-compose.md](03_storage-networking-compose.md) for full Compose examples.
+Compose runs multi-container applications.
 
 Start services:
 
@@ -455,15 +455,3 @@ Be careful with volume cleanup. Volumes can contain database data.
 ```bash
 docker buildx du
 ```
-
----
-
-## Next
-
-- [00_docker-fundamentals.md](00_docker-fundamentals.md) for core concepts
-- [02_dockerfile-java.md](02_dockerfile-java.md) for Java Dockerfile design
-- [03_storage-networking-compose.md](03_storage-networking-compose.md) for storage and networking
-- [04_runtime-config-health-logging.md](04_runtime-config-health-logging.md) for production behavior
-- [05_security-production.md](05_security-production.md) for security practices
-- [06_troubleshooting.md](06_troubleshooting.md) for debugging
-- [07_system-design-integration.md](07_system-design-integration.md) for system design
