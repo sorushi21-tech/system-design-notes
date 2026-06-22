@@ -25,6 +25,8 @@ Common objects:
 - `volume`: persistent storage operations
 - `compose`: multi-container application operations
 
+For Java services, the most common workflow is build the image, run the container, inspect logs, and iterate on the Dockerfile or JVM options.
+
 ---
 
 ## 2. Image Workflow
@@ -32,14 +34,24 @@ Common objects:
 ### Build an Image
 
 ```bash
-docker build -t my-app:1.0 .
+docker build -t payment-service:1.0 .
 ```
 
 Meaning:
 
 - `docker build`: build an image
-- `-t my-app:1.0`: name and tag the image
+- `-t payment-service:1.0`: name and tag the image
 - `.`: use the current directory as build context
+
+For Java apps, keep the build context narrow and use `.dockerignore` so Maven/Gradle caches, IDE files, and local artifacts do not slow builds.
+
+### Build with Build Args
+
+```bash
+docker build --build-arg MAVEN_OPTS='-Xmx2g' -t payment-service:1.0 .
+```
+
+Use build args when the image needs build-time configuration, but avoid passing secrets through `--build-arg`.
 
 ### List Images
 
@@ -75,6 +87,24 @@ docker push registry.example.com/my-app:1.0
 
 Use immutable tags such as Git SHA or version number for production. Avoid relying only on `latest`.
 
+### BuildKit and Buildx
+
+For Java builds with complex caching or multi-platform images, use BuildKit and Buildx:
+
+```bash
+docker buildx build --platform linux/amd64 -t my-app:1.0 --load .
+```
+
+Use `--pull` to ensure the latest base image and `--progress=plain` to capture logs when debugging build issues.
+
+### Build Args
+
+```bash
+docker build --build-arg MAVEN_OPTS='-Xmx2g' -t my-app:1.0 .
+```
+
+Use build args for build-time configuration, but never pass secrets through `--build-arg`.
+
 ---
 
 ## 3. Container Workflow
@@ -98,6 +128,22 @@ docker run -d --name my-app -p 8080:8080 my-app:1.0
 ```
 
 Detached mode runs the container in the background.
+
+### Environment and JVM Options
+
+```bash
+docker run -d --name my-app -p 8080:8080 -e SPRING_PROFILES_ACTIVE=prod -e JAVA_OPTS='-XX:MaxRAMPercentage=75 -XX:+ExitOnOutOfMemoryError' my-app:1.0
+```
+
+Pass runtime configuration via environment variables rather than baking profiles or secrets into the image.
+
+### Run Without Port Mapping for Internal Services
+
+```bash
+docker run --name batch-worker my-worker:1.0
+```
+
+Not every Java container requires published ports. Background jobs and message consumers often run without host port mapping.
 
 ### List Running Containers
 
@@ -135,7 +181,7 @@ docker rm my-app
 docker run --rm my-app:1.0
 ```
 
-Use `--rm` for temporary containers.
+Use `--rm` for temporary containers or command-line utilities.
 
 ---
 
@@ -164,6 +210,8 @@ If the image has Bash:
 ```bash
 docker exec -it my-app bash
 ```
+
+For Java images, using `docker exec` to inspect `ps -ef | grep java` and `cat /app/app.jar` is common when debugging classpath or permission issues.
 
 ### Inspect Container Details
 
@@ -221,7 +269,7 @@ docker network connect app-network my-app
 docker network inspect app-network
 ```
 
-Containers on the same user-defined bridge network can reach each other by container name. See [03_storage-networking-compose.md](03_storage-networking-compose.md) for more.
+Containers on the same user-defined bridge network can reach each other by container name. See [09_docker-networking.md](09_docker-networking.md) for more.
 
 ---
 
@@ -257,7 +305,8 @@ docker volume inspect app-data
 docker volume rm app-data
 ```
 
-Be careful: removing a volume can delete persistent data. See [03_storage-networking-compose.md](03_storage-networking-compose.md) for storage patterns.
+Be careful: removing a volume can delete persistent data. See [08_docker-storage.md](08_docker-storage.md) for storage patterns.
+
 
 ---
 

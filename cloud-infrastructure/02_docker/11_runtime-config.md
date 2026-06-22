@@ -51,3 +51,30 @@ Why limits matter:
 - Make capacity planning predictable.
 - Reveal memory leaks earlier.
 - Match production behavior more closely.
+
+## Java Runtime Options
+
+Java 11+ supports container-aware memory and CPU limits. Still configure JVM options explicitly for production.
+
+Recommended options:
+
+```bash
+docker run -e JAVA_OPTS='-XX:+UseContainerSupport -XX:MaxRAMPercentage=75 -XX:+ExitOnOutOfMemoryError -XX:ActiveProcessorCount=2 -Djava.security.egd=file:/dev/./urandom -Djava.io.tmpdir=/tmp' my-app:1.0
+```
+
+For Spring Boot services, avoid setting `-Xmx` directly unless you know the full non-heap requirements.
+
+Use environment variables to keep the image generic and let deployment platforms tune heap and CPU independently.
+
+## JVM Memory Behavior
+
+Container memory includes more than heap:
+
+- Heap
+- Metaspace
+- Thread stacks
+- Direct buffers
+- Code cache
+- JNI native allocations
+
+If the JVM is given the full container memory as heap, the process can still be OOM-killed because of native overhead.

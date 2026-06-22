@@ -55,6 +55,9 @@ Important design points:
 - Health checks protect traffic routing.
 - The service handles graceful shutdown.
 - Rollback means deploying the previous image version.
+- The Docker image should be treated as the deployable artifact, not as an environment.
+
+For Java teams, this means the CI pipeline should build the JAR and the image together, preserving artifact immutability and traceability.
 
 ## Stateful vs Stateless
 

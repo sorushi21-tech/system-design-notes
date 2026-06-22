@@ -35,3 +35,19 @@ docker run -v app-data:/data my-app:1.0
 | tmpfs        | In-memory mount                  | Temporary sensitive data             |
 
 Use named volumes for local databases. Use bind mounts when you want live file changes from the host.
+
+## JVM Temporary Storage
+
+Java uses a temp directory for file-based caches, lock files, and native libraries. In containers, it is best to set it explicitly:
+
+```bash
+docker run -e JAVA_OPTS='-Djava.io.tmpdir=/tmp' my-app:1.0
+```
+
+Use a writable directory for `java.io.tmpdir` and consider mounting it as a `tmpfs` for ephemeral workload data:
+
+```bash
+docker run --tmpfs /tmp:rw,size=256m my-app:1.0
+```
+
+This keeps temporary files out of the container writable layer and avoids disk pressure on the host.

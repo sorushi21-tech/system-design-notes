@@ -86,6 +86,25 @@ Not every application works with these options immediately. Java apps may need w
 docker run --read-only --tmpfs /tmp my-app:1.0
 ```
 
+For Java images, ensure the non-root user owns the application directories and temp directories:
+
+```dockerfile
+RUN addgroup --system app && adduser --system --ingroup app app
+WORKDIR /app
+COPY --chown=app:app target/app.jar app.jar
+USER app
+```
+
+## Java Dependency and Image Scanning
+
+Scan both the container image and the Java dependency tree.
+
+- Use `docker scan` or a private registry scanner for image vulnerabilities.
+- Use Maven/Gradle dependency analysis plugins to catch transitive CVEs.
+- Generate an SBOM for the final image when compliance requires it.
+
+For Java, image scanners should correlate vulnerable OS packages with vulnerable Maven/Gradle artifacts.
+
 ## Supply Chain Checklist
 
 - Build images in CI, not manually on a laptop.

@@ -148,6 +148,29 @@ Actions:
 - Capture heap dump in a controlled environment.
 - Add memory metrics and alerts.
 
+## Java-Specific Startup Failures
+
+If a Java service starts but exits immediately, common container-related causes include:
+
+- Missing or mislocated JAR file in the image.
+- Wrong `ENTRYPOINT` or `CMD` causing the JVM to start with invalid args.
+- File permission errors when running as a non-root user.
+- `NoSuchFileException` for `application.yml` or config directories.
+- `ClassNotFoundException` or `NoClassDefFoundError` when the jar is incorrect.
+
+Check the first lines of `docker logs <container>` and compare the container entrypoint with the expected artifact path.
+
+## Java Networking and Binding Issues
+
+If a Spring Boot app fails to bind:
+
+- Confirm `server.port` matches the exposed container port.
+- Avoid binding only to localhost inside the container.
+- Use `server.address=0.0.0.0` for containerized apps.
+- Ensure no other process in the container is already listening on that port.
+
+If the app can’t reach an external service, verify the JDBC/Redis host and network mode.
+
 ## Health Check Fails
 
 Common causes:

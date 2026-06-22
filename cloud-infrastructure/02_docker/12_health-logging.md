@@ -26,6 +26,18 @@ In Kubernetes, health is usually split into:
 
 For Spring Boot, expose health through Actuator and keep readiness separate from liveness.
 
+Use `management.endpoints.web.exposure.include=health,info,metrics` and configure the actuator path explicitly so health probes target the right endpoint.
+
+Example:
+
+```properties
+management.endpoints.web.exposure.include=health,info,metrics
+management.endpoint.health.probes.enabled=true
+management.endpoints.web.base-path=/actuator
+```
+
+By separating health and metrics, you avoid startup readiness failures from slow or optional monitoring endpoints.
+
 ## Graceful Shutdown
 
 Containers are stopped with signals. A Java service should handle shutdown gracefully:
