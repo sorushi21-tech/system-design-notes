@@ -1,6 +1,8 @@
-# Docker Command Workflows
+# Docker Commands
 
 This note explains practical Docker commands in a step-by-step way. The goal is not to memorize every command, but to understand the workflow: build an image, run a container, inspect it, debug it, clean it up, and publish it.
+
+See [00_docker-fundamentals.md](00_docker-fundamentals.md) for core concepts.
 
 ## 1. Basic Command Pattern
 
@@ -223,7 +225,7 @@ docker network connect app-network my-app
 docker network inspect app-network
 ```
 
-Containers on the same user-defined bridge network can reach each other by container name.
+Containers on the same user-defined bridge network can reach each other by container name. See [03_storage-networking-compose.md](03_storage-networking-compose.md) for more.
 
 ---
 
@@ -259,13 +261,13 @@ docker volume inspect app-data
 docker volume rm app-data
 ```
 
-Be careful: removing a volume can delete persistent data.
+Be careful: removing a volume can delete persistent data. See [03_storage-networking-compose.md](03_storage-networking-compose.md) for storage patterns.
 
 ---
 
 ## 7. Docker Compose Workflow
 
-Compose runs multi-container applications.
+Compose runs multi-container applications. See [03_storage-networking-compose.md](03_storage-networking-compose.md) for full Compose examples.
 
 Start services:
 
@@ -300,121 +302,83 @@ docker compose logs -f
 Run command in service:
 
 ```bash
-docker compose exec api sh
+docker compose exec <service> <command>
 ```
 
 ---
 
-## 8. Command Chaining
+## 8. Registry Commands
 
-Command chaining runs multiple commands together.
-
-| Operator | Meaning |
-| --- | --- |
-| `&&` | Run next command only if previous command succeeds |
-| `||` | Run next command only if previous command fails |
-| `;` | Run next command regardless of success or failure |
-| `|` | Send output of one command into another command |
-| `$()` | Use output of a command as an argument |
-
-### Safe Build and Run
+### Login to Registry
 
 ```bash
-docker build -t my-app:dev . && docker run --rm -p 8080:8080 my-app:dev
+docker login registry.example.com
 ```
 
-This runs the container only if the build succeeds.
-
-### Build, Tag, and Push
+### Push Image
 
 ```bash
-docker build -t my-app:1.0 . && docker tag my-app:1.0 registry.example.com/my-app:1.0 && docker push registry.example.com/my-app:1.0
+docker push registry.example.com/my-app:1.0
 ```
 
-### Stop and Remove Container
+### Pull Image
 
 ```bash
-docker stop my-app && docker rm my-app
+docker pull registry.example.com/my-app:1.0
 ```
 
-### Remove All Stopped Containers
+### Search Registry (Docker Hub)
 
 ```bash
-docker ps -aq -f status=exited | xargs docker rm
-```
-
-### Remove Dangling Images
-
-```bash
-docker images -f dangling=true -q | xargs docker rmi
+docker search redis
 ```
 
 ---
 
-## 9. Cleanup Commands
+## 9. System Commands
 
-### Remove Stopped Containers, Unused Networks, and Dangling Images
+### Show Docker Info
+
+```bash
+docker info
+```
+
+### Clean Up
+
+Remove stopped containers, unused networks, and dangling images:
 
 ```bash
 docker system prune
 ```
 
-### Aggressive Cleanup
+Aggressive cleanup (also removes tagged images not used by containers):
 
 ```bash
 docker system prune -a
 ```
 
-This removes unused images too. Be careful because future builds may need to download layers again.
-
-### Remove Unused Volumes
+Remove unused volumes:
 
 ```bash
 docker volume prune
 ```
 
-Be very careful with volume cleanup. Volumes can contain database data.
+Be careful with volume cleanup. Volumes can contain database data.
+
+### Inspect Builder Cache
+
+```bash
+docker buildx du
+```
 
 ---
 
-## 10. Practical Debug Checklist
+## Next
 
-When a container does not work:
-
-1. Check if it is running:
-
-```bash
-docker ps -a
-```
-
-2. Check logs:
-
-```bash
-docker logs <container>
-```
-
-3. Check port mapping:
-
-```bash
-docker port <container>
-```
-
-4. Inspect configuration:
-
-```bash
-docker inspect <container>
-```
-
-5. Enter the container:
-
-```bash
-docker exec -it <container> sh
-```
-
-6. Check resource usage:
-
-```bash
-docker stats
-```
-
-Most local Docker issues come from port conflicts, missing environment variables, wrong network names, file permission problems, or containers exiting immediately because the main process failed.
+- [00_docker-fundamentals.md](00_docker-fundamentals.md) for core concepts
+- [02_dockerfile-java.md](02_dockerfile-java.md) for Java Dockerfile design
+- [03_storage-networking-compose.md](03_storage-networking-compose.md) for storage and networking
+- [04_runtime-config-health-logging.md](04_runtime-config-health-logging.md) for production behavior
+- [05_security-production.md](05_security-production.md) for security practices
+- [06_troubleshooting.md](06_troubleshooting.md) for debugging
+- [07_system-design-integration.md](07_system-design-integration.md) for system design
