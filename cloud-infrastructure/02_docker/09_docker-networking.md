@@ -73,6 +73,30 @@ host.docker.internal
 
 For Linux, use network mode or a host gateway configuration when you need the container to access host services.
 
+## Host Network Mode
+
+```bash
+docker run --network host my-app:1.0
+```
+
+Host mode removes network isolation and is rarely a good production choice. It can be useful for debugging or performance-sensitive workloads, but it reduces portability and increases risk.
+
+## DNS Aliases and Extra Hosts
+
+In user-defined networks, you can provide service aliases:
+
+```bash
+docker run --network app-network --network-alias api my-api:1.0
+```
+
+You can also add static host entries:
+
+```bash
+docker run --add-host database:192.168.1.100 my-app:1.0
+```
+
+Use these sparingly; platform-managed service discovery is preferable for production deployments.
+
 ## Debugging Networking for Java Apps
 
 Useful checks:

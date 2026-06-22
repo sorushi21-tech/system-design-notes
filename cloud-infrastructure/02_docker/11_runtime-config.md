@@ -52,6 +52,13 @@ Why limits matter:
 - Reveal memory leaks earlier.
 - Match production behavior more closely.
 
+Also consider:
+
+- `--memory-swap` to control total memory+swap usage
+- `--pids-limit` to guard against fork bombs
+- `--ulimit` for file descriptors and process limits
+- `--cpu-shares` for relative CPU scheduling in multi-tenant hosts
+
 ## Java Runtime Options
 
 Java 11+ supports container-aware memory and CPU limits. Still configure JVM options explicitly for production.
@@ -61,6 +68,14 @@ Recommended options:
 ```bash
 docker run -e JAVA_OPTS='-XX:+UseContainerSupport -XX:MaxRAMPercentage=75 -XX:+ExitOnOutOfMemoryError -XX:ActiveProcessorCount=2 -Djava.security.egd=file:/dev/./urandom -Djava.io.tmpdir=/tmp' my-app:1.0
 ```
+
+Use `JAVA_TOOL_OPTIONS` or `JAVA_OPTS` in the runtime environment rather than hardcoding them into the image. For Spring Boot, `SPRING_APPLICATION_JSON` is useful for nested runtime config:
+
+```bash
+docker run -e SPRING_APPLICATION_JSON='{"spring":{"datasource":{"url":"jdbc:postgresql://postgres:5432/myapp"}}}' my-app:1.0
+```
+
+If you need a properties file, mount it read-only using a volume; avoid baking deployment-specific configuration into the image.
 
 For Spring Boot services, avoid setting `-Xmx` directly unless you know the full non-heap requirements.
 

@@ -51,3 +51,28 @@ payment-service:1.0 image
 | Use case  | Strong isolation, full OS control | App packaging and scaling |
 
 Containers are lighter because they do not run a full guest operating system. They share the host kernel but isolate processes, filesystems, networks, and resources.
+
+## Image Tags, Digests, and Immutability
+
+Tags are mutable labels for images. In production, prefer image digests (`@sha256:...`) or immutable tags tied to a build or commit.
+
+A digest uniquely identifies the image content, while a tag is a convenient alias. For example:
+
+```text
+my-app:1.0
+my-app@sha256:abcdef123456...
+```
+
+This is important for reproducible deployments and rollbacks.
+
+## How Image Layers Work
+
+Images are built as a stack of immutable layers. Each Dockerfile instruction creates a layer. When you start a container, Docker mounts a new writable layer on top of those read-only layers.
+
+That means:
+
+- layers can be shared across images and containers
+- small changes produce smaller deltas
+- the writable layer only contains runtime changes
+
+For Java apps, this is why layered jars and careful layer ordering matter: dependency and runtime layers can be reused across builds.

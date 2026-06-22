@@ -93,6 +93,40 @@ Run a command in a service:
 docker compose exec api sh
 ```
 
+Validate the combined Compose configuration before running it:
+
+```bash
+docker compose config
+```
+
+Use multiple Compose files to enable local overrides and shared service definitions:
+
+```bash
+docker compose -f docker-compose.yml -f docker-compose.dev.yml up
+```
+
+Define reusable profiles for optional local services and test fixtures:
+
+```yaml
+services:
+  api:
+    profiles:
+      - local
+```
+
+Use `env_file` for environment-specific values and keep secrets out of version control.
+
+```yaml
+services:
+  api:
+    env_file:
+      - .env.local
+```
+
+Use `restart: unless-stopped` for developer and test services that should recover automatically.
+
+Use `build.args` to pass build-time values without hardcoding them into the Dockerfile.
+
 ## Java-Specific Compose Notes
 
 - `depends_on` controls container start order, but it does not guarantee the application is ready. Use health checks or application retry logic.

@@ -27,6 +27,10 @@ USER app
 
 For Java images, make sure the non-root user can read the application files and write only to intended temporary directories.
 
+### Rootless Docker
+
+Rootless Docker improves host security by running the daemon and containers without `root` privileges. It is a good fit for developer laptops and some CI environments, but it may require additional setup for networking and bind mounts.
+
 ## Base Image Choice
 
 Common Java base image options:
@@ -104,6 +108,16 @@ Scan both the container image and the Java dependency tree.
 - Generate an SBOM for the final image when compliance requires it.
 
 For Java, image scanners should correlate vulnerable OS packages with vulnerable Maven/Gradle artifacts.
+
+### BuildKit Secrets and Secure Builds
+
+Use BuildKit build secrets and SSH mounts during image creation to avoid placing credentials in image layers:
+
+```bash
+docker buildx build --secret id=maven-settings,src=settings.xml --ssh default .
+```
+
+This keeps sensitive build-time data out of the final image.
 
 ## Supply Chain Checklist
 

@@ -26,6 +26,8 @@ In Kubernetes, health is usually split into:
 
 For Spring Boot, expose health through Actuator and keep readiness separate from liveness.
 
+When using Docker health checks, avoid probes that exercise slow downstream dependencies. The container may be restarted before the application finishes warmup if the health check is too aggressive.
+
 Use `management.endpoints.web.exposure.include=health,info,metrics` and configure the actuator path explicitly so health probes target the right endpoint.
 
 Example:
@@ -71,6 +73,21 @@ Application
   -> container runtime
   -> log collector
   -> searchable log backend
+```
+
+For Docker-specific logging behavior, choose a driver that matches your environment and production architecture.
+
+Common drivers:
+
+- `json-file` for local development
+- `local` for high-performance local storage
+- `journald` for systems using systemd
+- `gelf`, `fluentd`, `awslogs` for cloud log collection
+
+Use log rotation options in production if the local driver is in use:
+
+```bash
+docker run --log-driver json-file --log-opt max-size=10m --log-opt max-file=3 my-app:1.0
 ```
 
 Avoid writing important logs only inside container files because containers are temporary.

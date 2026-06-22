@@ -34,6 +34,10 @@ Do not claim Docker solves:
 
 Those are usually handled by Kubernetes, ECS, service meshes, load balancers, deployment controllers, or cloud services.
 
+Docker is primarily the packaging and runtime layer. The actual application contract, reliability, and operations model are defined by the orchestration and platform around it.
+
+Those are usually handled by Kubernetes, ECS, service meshes, load balancers, deployment controllers, or cloud services.
+
 ## Java Backend Deployment Example
 
 ```text

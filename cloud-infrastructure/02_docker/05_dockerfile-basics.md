@@ -86,6 +86,21 @@ node_modules
 
 If the Dockerfile expects `target/app.jar`, do not ignore `target`. If the Dockerfile builds the artifact inside Docker, ignoring `target` is usually correct.
 
+## Dockerfile Metadata and Build Arguments
+
+Use `LABEL` for image metadata and `ARG` for build-time parameters.
+
+```dockerfile
+ARG APP_VERSION=1.0
+LABEL maintainer="team@example.com" \
+      org.opencontainers.image.version="$APP_VERSION" \
+      org.opencontainers.image.source="https://github.com/org/repo"
+```
+
+`ARG` values are not secret-safe. Do not use them for credentials.
+
+Use `COPY --chown=app:app` when building a non-root runtime image to avoid file permission issues.
+
 ## ENTRYPOINT vs CMD
 
 Use `ENTRYPOINT` for the executable and `CMD` for default runtime arguments.

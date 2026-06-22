@@ -50,6 +50,15 @@ Common causes:
 - Application startup failure.
 - Java cannot find the JAR file.
 - Spring profile points to unavailable dependencies.
+- Permissions problems when running as non-root.
+- Line ending or shell syntax issues in entrypoint scripts.
+
+Actions:
+
+- Check `docker logs <container>` for JVM startup errors.
+- Run `docker inspect --format '{{.Config.Cmd}}' <container>` to verify the command.
+- Use `docker run --entrypoint sh -it my-app:1.0` to debug the runtime filesystem.
+- For distroless images, use a debug image or `COPY --from=debug` during build to inspect artifacts.
 
 Check:
 
@@ -131,6 +140,12 @@ Symptoms:
 - Container exits with code `137`.
 - Logs stop suddenly.
 - Orchestrator reports OOMKilled.
+
+Advanced checks:
+
+- Use `docker inspect <container>` and inspect `HostConfig.Memory` and `State.OOMKilled`.
+- Enable `-XX:+HeapDumpOnOutOfMemoryError` with a writable dump location mounted as a volume.
+- Avoid `-Xmx` too close to container memory limits; leave headroom for thread stacks and native allocations.
 
 Common causes:
 

@@ -273,6 +273,46 @@ Containers on the same user-defined bridge network can reach each other by conta
 
 ---
 
+## 5. Advanced Docker Commands
+
+### Remove all unused images, containers, and cache
+
+```bash
+docker system prune --all --volumes
+```
+
+### Inspect image history
+
+```bash
+docker history --no-trunc my-app:1.0
+```
+
+### Show image metadata
+
+```bash
+docker image inspect my-app:1.0
+```
+
+### Show container events
+
+```bash
+docker events --filter container=my-app
+```
+
+### Format command output for automation
+
+```bash
+docker ps --format '{{.ID}}	{{.Image}}	{{.Status}}'
+```
+
+### Build without cache when troubleshooting build determinism
+
+```bash
+docker build --no-cache -t my-app:1.0 .
+```
+
+Use advanced commands to keep production build and cleanup processes reliable.
+
 ## 6. Volume Commands
 
 ### Create Volume

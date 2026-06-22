@@ -29,6 +29,10 @@ The background service that manages:
 - Volumes
 - Builds
 
+Modern Docker implementations delegate container execution to lower-level components such as `containerd` and `runc`. BuildKit is frequently used for build acceleration and secret/SSH mounts.
+
+Docker can also run in rootless mode for improved developer security, though rootless mode may require additional setup for network and filesystem access.
+
 ## Registry
 
 A registry stores Docker images.

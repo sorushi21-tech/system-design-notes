@@ -18,4 +18,6 @@ Docker helps with:
 - Simpler scaling
 - Cloud-native deployment
 
+Docker is not always the right first choice for every project. It introduces an operational layer and requires teams to manage image lifecycle, runtime configuration, and orchestrator integration.
+
 Docker solves these problems by packaging the application and its runtime dependencies into a standard unit called a container.

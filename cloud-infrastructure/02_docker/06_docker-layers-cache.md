@@ -77,6 +77,20 @@ COPY src ./src
 RUN --mount=type=cache,target=/home/gradle/.gradle gradle --no-daemon bootJar
 ```
 
+### BuildKit Secrets and SSH
+
+For dependency repositories or private Git modules, use BuildKit secret and SSH mounts instead of baking credentials into layers.
+
+```dockerfile
+RUN --mount=type=ssh mvn -B -s /root/.m2/settings.xml clean package
+```
+
+This keeps sensitive data out of the final image.
+
+### Cache Management
+
+Use `docker builder prune` and `docker buildx du` to keep build cache size predictable. In CI, prune stale caches periodically to avoid unbounded disk usage.
+
 ## Reproducible Builds
 
 To keep Java images reproducible:
