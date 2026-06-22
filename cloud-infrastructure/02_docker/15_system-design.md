@@ -85,12 +85,12 @@ In interviews, prefer managed stateful services unless there is a reason to oper
 
 Container image versions make deployment strategies easier:
 
-| Strategy | Meaning | Docker Role |
-| --- | --- | --- |
-| Rolling | Replace instances gradually | New image version rolled out slowly |
+| Strategy   | Meaning                                         | Docker Role                                 |
+|------------|-------------------------------------------------|---------------------------------------------|
+| Rolling    | Replace instances gradually                     | New image version rolled out slowly         |
 | Blue-green | Switch traffic between old and new environments | Old and new image versions run side by side |
-| Canary | Send small traffic percentage to new version | New image tested with limited traffic |
-| Rollback | Return to previous version | Redeploy previous image tag or digest |
+| Canary     | Send small traffic percentage to new version    | New image tested with limited traffic       |
+| Rollback   | Return to previous version                      | Redeploy previous image tag or digest       |
 
 ## Senior-Level Tradeoffs
 
