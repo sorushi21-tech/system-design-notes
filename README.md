@@ -1320,10 +1320,10 @@
 ### Containers & Orchestration
 
 - [ ] **docker-fundamentals**
-    - Image layers, Dockerfile best practices, multi-stage builds
-    - Container networking: bridge, host, overlay
-    - Volumes for persistent data
-    - Resource limits: `--memory`, `--cpus`
+    - Overview, images, containers, layers, and registries
+    - Java Dockerfile patterns, multi-stage builds, and `.dockerignore`
+    - Storage, networking, Compose, runtime config, health, and logging
+    - Security, troubleshooting, and Docker in system design
 
 - [ ] **kubernetes-basics**
     - Pod, Deployment, Service, ConfigMap, Secret, Namespace
