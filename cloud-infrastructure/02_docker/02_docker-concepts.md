@@ -19,7 +19,9 @@ Think of an image as a packaged blueprint.
 
 ### Container
 
-A container is a running instance of an image.
+- A container is a running instance of an image.
+- It is encapsulated environment in which application runs.
+- It packages the application and its dependencies into a single executable unit.
 
 Example:
 
